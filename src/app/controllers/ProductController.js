@@ -1,11 +1,11 @@
-const Product = require('../app/models/Product');
+import Product from '../models/Product';
 
-module.exports = {
+class ProductController {
   async index(req, res) {
     const products = await Product.find();
 
     return res.json(products);
-  },
+  }
 
   async store(req, res) {
     const {
@@ -18,9 +18,9 @@ module.exports = {
       sugested_value,
     } = req.body;
 
-    const existProduct = Product.findOne({ type, brand });
+    const existingProduct = await Product.findOne({ type, brand });
 
-    if (existProduct) {
+    if (existingProduct) {
       return res.status(406).json({ message: 'Produto já existe' });
     }
 
@@ -39,27 +39,27 @@ module.exports = {
     });
 
     return res.json(product);
-  },
+  }
 
   async destroy(req, res) {
     const { id } = req.params;
 
-    const product = await Product.findOne({ _id: id });
+    const existingProduct = await Product.findOne({ _id: id });
 
-    if (!product)
+    if (!existingProduct)
       return res.status(404).json({ message: 'Produto não encontrado' });
 
     await Product.findByIdAndDelete(id);
 
     return res.status(204).send();
-  },
+  }
 
   async update(req, res) {
     const { id } = req.params;
 
-    const existProduct = await Product.findOne({ _id: id });
+    const existingProduct = await Product.findOne({ _id: id });
 
-    if (!existProduct)
+    if (!existingProduct)
       return res.status(404).json({ message: 'Produto não encontrado' });
 
     const {
@@ -81,9 +81,11 @@ module.exports = {
       color,
       value,
       sugested_value,
-      amount: existProduct.amount + amount,
+      amount: existingProduct.amount + amount,
     });
 
     return res.json(product);
-  },
-};
+  }
+}
+
+export default new ProductController();
