@@ -18,7 +18,7 @@ class ProductController {
       sugested_value,
     } = req.body;
 
-    const existingProduct = await Product.findOne({ type, brand });
+    const existingProduct = await Product.findOne({ type, brand, size, color });
 
     if (existingProduct) {
       return res.status(406).json({ message: 'Produto já existe' });

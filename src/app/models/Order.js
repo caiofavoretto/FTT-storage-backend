@@ -5,4 +5,4 @@ const OrderSchema = new mongoose.Schema({
   order_value: Number,
 });
 
-module.exports = mongoose.model('Product', OrderSchema);
+export default mongoose.model('Product', OrderSchema);
