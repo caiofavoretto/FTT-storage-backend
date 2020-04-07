@@ -2,7 +2,13 @@ import Product from '../models/Product';
 
 class ProductController {
   async index(req, res) {
-    const products = await Product.find();
+    const {page} = req.query;
+
+    const count = await Product.count();
+
+    const products = await Product.find({skip:10 * page-1, limit:10});
+
+    res.header('X-Total-Count', count);
 
     return res.json(products);
   }
