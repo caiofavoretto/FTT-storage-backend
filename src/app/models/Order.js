@@ -7,7 +7,7 @@ const OrderSchema = new mongoose.Schema({
 });
 
 OrderSchema.virtual('profit_value').get(() => {
-  return this.order_value * 2
+  return this.order_value * 2;
 });
 
-export default mongoose.model('Product', OrderSchema);
+export default mongoose.model('Order', OrderSchema);

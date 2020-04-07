@@ -2,11 +2,14 @@ import Product from '../models/Product';
 
 class ProductController {
   async index(req, res) {
-    const {page} = req.query;
+    const { page } = req.query;
 
-    const count = await Product.count();
+    const count = await Product.countDocuments();
 
-    const products = await Product.find({skip:10 * page-1, limit:10});
+    const products = await Product.find(null, null, {
+      skip: 10 * (page - 1),
+      limit: 10,
+    });
 
     res.header('X-Total-Count', count);
 
