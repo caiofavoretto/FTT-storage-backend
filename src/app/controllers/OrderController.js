@@ -44,6 +44,7 @@ class OrderController {
     const order = await Order.create({
       product: product_id,
       value: productExists.value * amount,
+      profit_value: productExists.value * amount * 2,
       amount,
       created_at: new Date(),
       canceled_at: null,

@@ -1,4 +1,5 @@
 import Order from '../models/Order';
+import Product from '../models/Product';
 
 class CancelOrderController {
   async update(req, res) {
@@ -9,6 +10,18 @@ class CancelOrderController {
     if (!orderExists) {
       return res.json(404).json({ message: 'Este compra não foi encontrada.' });
     }
+
+    const productExists = await Product.findOne({ _id: orderExists.product });
+
+    if (!productExists) {
+      return res
+        .json(404)
+        .json({ message: 'Este produto não está cadastrado.' });
+    }
+
+    productExists.amount += orderExists.amount;
+
+    await productExists.save();
 
     orderExists.canceled_at = new Date();
 
