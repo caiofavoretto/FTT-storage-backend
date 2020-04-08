@@ -1,13 +1,18 @@
 import mongoose from 'mongoose';
 
 const OrderSchema = new mongoose.Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+  },
+  value: Number,
+  amount: Number,
   created_at: Date,
-  product_id: String,
-  order_value: Number,
+  canceled_at: Date,
 });
 
 OrderSchema.virtual('profit_value').get(() => {
-  return this.order_value * 2;
+  return this.value * 2;
 });
 
 export default mongoose.model('Order', OrderSchema);

@@ -1,15 +1,18 @@
 import Order from '../models/Order';
+import Product from '../models/Product';
 
 class OrderController {
   async index(req, res) {
-    const { page=1 } = req.query;
+    const { page = 1 } = req.query;
 
     const count = await Order.countDocuments();
 
     const orders = await Order.find(null, null, {
       skip: 10 * (page - 1),
       limit: 10,
-    });
+    })
+      .populate('product')
+      .exec();
 
     res.header('X-Total-Count', count);
 
@@ -17,16 +20,36 @@ class OrderController {
   }
 
   async store(req, res) {
-    const { order_value } = req.body;
-
-    const created_at = new Date().getDate();
+    const { amount } = req.body;
     const { product_id } = req.params;
 
+    const productExists = await Product.findOne({ _id: product_id });
+
+    if (!productExists) {
+      return res
+        .status(404)
+        .json({ message: 'Este produto não foi encontrado.' });
+    }
+
+    if (productExists.amount < amount) {
+      return res
+        .status(406)
+        .json({ message: 'Quantidade insuficiente no estoque.' });
+    }
+
+    productExists.amount -= amount;
+
+    await productExists.save();
+
     const order = await Order.create({
-      created_at,
-      product_id,
-      order_value,
+      product: product_id,
+      value: productExists.value * amount,
+      amount,
+      created_at: new Date(),
+      canceled_at: null,
     });
+
+    await order.populate('product').execPopulate();
 
     return res.json(order);
   }
