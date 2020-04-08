@@ -2,7 +2,9 @@ import Product from '../models/Product';
 
 class ProductController {
   async index(req, res) {
-    const { page } = req.query;
+    const { page=1} = req.query;
+
+    console.log(page);
 
     const count = await Product.countDocuments();
 

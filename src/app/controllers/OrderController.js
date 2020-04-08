@@ -2,7 +2,7 @@ import Order from '../models/Order';
 
 class OrderController {
   async index(req, res) {
-    const { page } = req.query;
+    const { page=1 } = req.query;
 
     const count = await Order.countDocuments();
 
