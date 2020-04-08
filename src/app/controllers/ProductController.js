@@ -1,8 +1,5 @@
 import Product from '../models/Product';
 
-import { format } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-
 class ProductController {
   async index(req, res) {
     const { page = 1 } = req.query;
@@ -35,10 +32,6 @@ class ProductController {
     if (productExists) {
       return res.status(406).json({ message: 'Produto já existe' });
     }
-
-    const formattedDate = format(new Date(), 'd MMM yyyy', {
-      locale: pt,
-    });
 
     const product = await Product.create({
       type,
