@@ -8,8 +8,8 @@ class OrderController {
     const count = await Order.countDocuments();
 
     const orders = await Order.find(null, null, {
-      skip: 10 * (page - 1),
-      limit: 10,
+      skip: 5 * (page - 1),
+      limit: 5,
     })
       .populate('product')
       .exec();
